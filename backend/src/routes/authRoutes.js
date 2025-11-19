@@ -11,8 +11,8 @@ function createAuthRouter(authController) {
   router.get("/profile", verifyAccessToken, authController.getProfile);
 
   // New route
-  router.post("/change-password/:new_pass_token", authController.changePassword);
-  router.get("/change-password/:new_pass_token", authController.verifyNewPassToken);
+  // router.post("/change-password/:new_pass_token", authController.changePassword);
+  // router.get("/change-password/:new_pass_token", authController.verifyNewPassToken);
 
   return router;
 }

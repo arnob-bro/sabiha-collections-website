@@ -17,16 +17,16 @@ class AuthController {
       this.logout = this.logout.bind(this);
       this.refresh = this.refresh.bind(this);
       this.getProfile = this.getProfile.bind(this);
-      this.changePassword = this.changePassword.bind(this);
-      this.verifyNewPassToken = this.verifyNewPassToken.bind(this);
+      // this.changePassword = this.changePassword.bind(this);
+      // this.verifyNewPassToken = this.verifyNewPassToken.bind(this);
     }
   
     async createUser(req, res) {
       try {
-        const { user_id, email, password, role} = req.body;
+        const { email, password, role, first_name, last_name, phone} = req.body;
         
         // check if all fields are provided
-        if (!user_id  || !email || !password || !role) {
+        if (!email || !password || !role || !first_name || !last_name) {
           return res.status(400).json({success: false, message: "All fields are required"});
         }
         
@@ -34,34 +34,31 @@ class AuthController {
         // check if email is a valid email
         if (!/^(?!.*\.\.)(?!.*\.$)[^\W][\w.+-]{0,63}@[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,}$/.test(email)) {
           return res.status(400).json({ success: false, message: "Invalid email" });
-        }
-        
-        // check if user_id is a valid user_id
-        if (!/^[A-Za-z0-9_-]{3,20}$/.test(user_id)) {
-          return res.status(400).json({ success: false, message: "Invalid user_id" });
-        }
-        
-        
+        } 
         
         // check if password is at least 6 characters
-        if (password.length < 6) {
+        if (password.trim().length < 6) {
           return res.status(400).json({success: false, message: "Password must be at least 6 characters"});
         }
-        // check if password is a valid password
-        if (!/^[a-zA-Z0-9]{6,}$/.test(password)) {
-          return res.status(400).json({success: false, message: "Invalid password"});
-        }
+        
         
         
         // check if user already exists
-        const userExists = await this.userService.getUserByEmail(email);
+        const userExists = await this.userService.getUserByEmail(email.toLowerCase());
         if (userExists) {
-          return res.status(400).json({success: false, message: "User already exists"});
+          return res.status(409).json({success: false, message: "User already exists"});
         }
 
         
-        const user = await this.userService.createUser(user_id, email, password, role);
-        res.status(201).json({success: true, message: "User created successfully", user});
+        const user = await this.userService.createUser(
+          email.toLowerCase(), 
+          password.trim(), 
+          role,
+          first_name,
+          last_name,
+          phone
+        );
+        res.status(201).json({success: true, message: "User created successfully"});
       } catch (err) {
         res.status(400).json({ success: false, message: err.message });
       }
@@ -71,32 +68,32 @@ class AuthController {
       try {
 
           const { email, password } = req.body;
-          // check if email is a valid email
-        if (!/^(?!.*\.\.)(?!.*\.$)[^\W][\w.+-]{0,63}@[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,}$/.test(email)) {
-          return res.status(400).json({ success: false, message: "Invalid email" });
-        }
-          // check if password is at least 6 characters
-          if (password.length < 6) {
-            return res.status(400).json({success: false, message: "Password must be at least 6 characters"});
-          }
-          // check if password is a valid password
-          if (!/^[a-zA-Z0-9]{6,}$/.test(password)) {
-            return res.status(400).json({success: false, message: "Invalid password"});
-          }
+
           // check if email and password are provided
           if (!email || !password) {
             return res.status(400).json({success: false, message: "Email and password are required"});
           }
+          
+          // check if email is a valid email
+          if (!/^(?!.*\.\.)(?!.*\.$)[^\W][\w.+-]{0,63}@[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,}$/.test(email)) {
+            return res.status(400).json({ success: false, message: "Invalid email" });
+          }
+          // check if password is at least 6 characters
+          if (password.trim().length < 6) {
+            return res.status(400).json({success: false, message: "Password must be at least 6 characters"});
+          }
+          console.log(email);
+          console.log(password);
+          
+          
           // check if user exists
-          const user = await this.userService.getUserByEmail(email);
+          const user = await this.userService.getUserByEmail(email.toLowerCase());
           if (!user) {
-            return res.status(400).json({success: false, message: "User not found"});
+            return res.status(404).json({success: false, message: "Invalid credentials"});
           }
-          if(!user.verified){
-            return res.status(400).json({success: false, message: "Verify your account through the link sent via email"});
-          }
+
           // check if password is correct
-          const isPasswordCorrect = await bcrypt.compare(password, user.password_hash);
+          const isPasswordCorrect = await bcrypt.compare(password.trim(), user.password_hash);
           if (!isPasswordCorrect) {
             return res.status(400).json({success: false, message: "Invalid password"});
           }
@@ -105,11 +102,11 @@ class AuthController {
           const refreshToken = generateRefreshToken(user.user_id);
           console.log(accessToken);
           console.log(refreshToken);
-          const userPermissions = await this.userService.getUserPermissionsWithCodes(user.user_id);
+          // const userPermissions = await this.userService.getUserPermissionsWithCodes(user.user_id);
 
           res.cookie("refreshToken", refreshToken, {
             httpOnly: true,
-            secure: true, 
+            secure: false, 
             sameSite: "none",
             maxAge: 7 * 24 * 60 * 60 * 1000,
           });
@@ -118,8 +115,8 @@ class AuthController {
             success: true, 
             message: "Login successful", 
             accessToken, 
-            permissions: userPermissions.permissions,
-				    permissionCodes: userPermissions.permissionCodes,
+            // permissions: userPermissions.permissions,
+				    // permissionCodes: userPermissions.permissionCodes,
             user: {
               user_id: user.user_id,
               email: user.email,

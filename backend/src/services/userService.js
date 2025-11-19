@@ -24,51 +24,53 @@ class UserService {
 }
 
   // ----------Signup---------------
-  async createUser(user_id, email, password, role) {
+  async createUser(email, password, role, first_name, last_name, phone) {
     try {
 
       // Hash password
       const hashedPassword = await bcrypt.hash(password, 10);
-      const token = this.generateNewPassToken();
-      const link = `${process.env.FRONTEND_URL}/change-password/${token}`;
+      // const token = this.generateNewPassToken();
+      // const link = `${process.env.FRONTEND_URL}/change-password/${token}`;
 
       // Insert user
       const result = await this.db.query(
         `INSERT INTO users 
-        (user_id, email, password_hash, role, new_pass_token)
-       VALUES ($1,$2,$3,$4,$5)
+        (email, password_hash, role, first_name, last_name, phone)
+       VALUES ($1,$2,$3,$4,$5,$6)
        RETURNING *`,
         [
-            user_id,
-            email,
-            hashedPassword,
-            role,
-            token  
+            
+          email, 
+          hashedPassword, 
+          role, 
+          first_name, 
+          last_name, 
+          phone
         ]
       );
 
-      this.transporter.sendMail({
-        from: `"M3TechOps Team" <${process.env.EMAIL_USER}>`,
-        to: email,
-        subject: `Set Your New Password & Verify Your Account`,
-        html: `
-            <div style="font-family: Arial, sans-serif; padding: 20px; background:#f9f9f9; color:#333;">
-              <h2 style="color:#0e0e53;">Welcome to M3TechOps!</h2>
-              <p>We noticed you need to set a new password to get started. Once you set your new password, your account will be <b>automatically verified</b>.</p>
+      // this.transporter.sendMail({
+      //   from: `"M3TechOps Team" <${process.env.EMAIL_USER}>`,
+      //   to: email,
+      //   subject: `Set Your New Password & Verify Your Account`,
+      //   html: `
+      //       <div style="font-family: Arial, sans-serif; padding: 20px; background:#f9f9f9; color:#333;">
+      //         <h2 style="color:#0e0e53;">Welcome to M3TechOps!</h2>
+      //         <p>We noticed you need to set a new password to get started. Once you set your new password, your account will be <b>automatically verified</b>.</p>
               
-              <a href="${link}" 
-                  style="display:inline-block; margin:15px 0; padding:12px 20px; background:#22577a; color:#fff; font-weight:bold; text-decoration:none; border-radius:8px;">
-                  Change Password
-              </a>
+      //         <a href="${link}" 
+      //             style="display:inline-block; margin:15px 0; padding:12px 20px; background:#22577a; color:#fff; font-weight:bold; text-decoration:none; border-radius:8px;">
+      //             Change Password
+      //         </a>
       
-              <p>If the button doesn’t work, copy and paste this link into your browser:</p>
-              <p><a href="${link}" style="color:#ff8800;">${link}</a></p>
+      //         <p>If the button doesn’t work, copy and paste this link into your browser:</p>
+      //         <p><a href="${link}" style="color:#ff8800;">${link}</a></p>
       
-              <hr style="margin-top:20px; border:none; border-top:1px solid #ddd;" />
-              <p style="font-size:12px; color:#777;">If you did not request this change, please ignore this email.</p>
-            </div>
-        `,
-      });
+      //         <hr style="margin-top:20px; border:none; border-top:1px solid #ddd;" />
+      //         <p style="font-size:12px; color:#777;">If you did not request this change, please ignore this email.</p>
+      //       </div>
+      //   `,
+      // });
       
 
       return { success: true, message: "User creation successful." };

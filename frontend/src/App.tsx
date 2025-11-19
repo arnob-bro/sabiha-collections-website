@@ -1,10 +1,10 @@
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
-import Home from "./components/Home/Home";
-import Products from "./components/Products/Products";
-import Login from "./components/Account/Login/Login";
-import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
-import Signup from "./components/Account/Signup/Signup";
+import Home from "./components/pages/Home";
+import Products from "./components/pages/Products";
+import Login from "./components/pages/Account/Login/Login";
+import Navbar from "./components/common/Navbar";
+import Footer from "./components/common/Footer";
+import Signup from "./components/pages/Account/Signup/Signup";
 // import LoginPage from "./components/Account/Login/LoginPage"
 // import Account from "./components/Account/Account"
 

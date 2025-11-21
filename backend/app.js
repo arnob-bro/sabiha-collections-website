@@ -3,6 +3,7 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 
 const createAuthRouter = require("./src/routes/authRoutes");
+const createDatabaseRouter = require("./src/routes/databaseRoutes");
 // const createInquiryRouter = require("./src/routes/inquiryRoutes");
 // const createRoleRouter = require("./src/routes/roleRoutes");
 // const createPolicyRouter = require("./src/routes/policyRoutes");
@@ -10,6 +11,7 @@ const createAuthRouter = require("./src/routes/authRoutes");
 // const createTestimonialRouter = require("./src/routes/testimonialRoutes");
 
 const AuthController = require("./src/controllers/authController");
+const DatabaseController = require("./src/controllers/databaseController");
 // const InquiryController = require("./src/controllers/inquiryController");
 // const RoleController = require("./src/controllers/roleController");
 // const PolicyController = require("./src/controllers/policyController");
@@ -17,6 +19,7 @@ const AuthController = require("./src/controllers/authController");
 // const TestimonialController = require("./src/controllers/testimonialController");
 
 const UserService = require("./src/services/userService");
+const DatabaseInspectorService = require("./src/services/databaseInspectorService");
 // const InquiryService = require("./src/services/inquiryService");
 // const RoleService = require("./src/services/roleService");
 // const PolicyService = require("./src/services/policyService");
@@ -57,6 +60,7 @@ app.get("/", (req, res) => {
 
 //Dependency injection
 const userService = new UserService(db);
+const databaseInspectorService = new DatabaseInspectorService(db);
 // const inquiryService = new InquiryService(db);
 // const roleService = new RoleService(db);
 // const policyService = new PolicyService(db);
@@ -64,6 +68,7 @@ const userService = new UserService(db);
 // const testimonialService = new TestimonialService(db);
 
 const authController = new AuthController(userService);
+const databaseController = new DatabaseController(databaseInspectorService);
 // const inquiryController = new InquiryController(inquiryService);
 // const roleController = new RoleController(roleService);
 // const policyController = new PolicyController(policyService);
@@ -71,6 +76,7 @@ const authController = new AuthController(userService);
 // const testimonialController = new TestimonialController(testimonialService);
 
 const authRouter = createAuthRouter(authController);
+const databaseRouter = createDatabaseRouter(databaseController);
 // const inquiryRouter = createInquiryRouter(inquiryController);
 // const roleRouter = createRoleRouter(roleController);
 // const policyRouter = createPolicyRouter(policyController);
@@ -81,6 +87,7 @@ const authRouter = createAuthRouter(authController);
 
 // API routes
 app.use("/auth", authRouter);
+app.use("/db", databaseRouter);
 // app.use("/inquiry", inquiryRouter);
 // app.use("/role", roleRouter);
 // app.use("/policy", policyRouter);

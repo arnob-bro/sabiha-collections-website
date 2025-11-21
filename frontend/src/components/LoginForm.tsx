@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { FaEye, FaEyeSlash, FaUser, FaLock, FaGoogle } from "react-icons/fa";
-import classNames from "classnames";
 import { MdOutlineMail } from "react-icons/md";
 
 export default function LoginForm() {

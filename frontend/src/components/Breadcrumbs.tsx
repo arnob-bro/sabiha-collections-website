@@ -26,7 +26,7 @@ export default function Breadcrumbs() {
 								</span>
 							) : (
 								<Link to={to} className='hover:underline'>
-									{value}
+									{value.charAt(0).toUpperCase() + value.slice(1)}
 								</Link>
 							)}
 						</li>

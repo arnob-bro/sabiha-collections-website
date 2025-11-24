@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import AuthApi from "../apis/authApi";
+import AuthApi from "../apiCalls/authApi";
 
 const authApi = new AuthApi();
 

@@ -98,6 +98,15 @@ class CategoryController {
               if (parent_id === category_id) {
                 return res.status(400).json({ success: false, message: "Category cannot be its own parent" });
               }
+
+              // Prevent circular tree
+              const isCircular = await this.categoryService.isDescendant(category_id, parent_id);
+              if (isCircular) {
+                return res.status(400).json({
+                  success: false,
+                  message: "Circular reference detected"
+                });
+              }
           }
           const data = await this.categoryService.editCategory({category_id, name, slug, parent_id, is_featured, is_active});
           res.json({ success: true, data });

@@ -43,7 +43,6 @@ class CategoryService {
   async addCategory({name, slug, parent_id, is_featured, is_active}) {
     try {
 
-      console.log("in addCategory Service", name, slug, parent_id, is_featured, is_active);
       const result = await this.db.query(
         `INSERT INTO categories 
         (name, slug, parent_id, is_featured, is_active)
@@ -75,6 +74,29 @@ class CategoryService {
       throw new Error("Failed to get category by category_id");
     }
   }
+
+  async isDescendant(childId, parentId) {
+    const result = await this.db.query(
+      `
+      WITH RECURSIVE category_tree AS (
+        SELECT category_id, parent_id
+        FROM categories
+        WHERE category_id = $1
+        
+        UNION ALL
+        
+        SELECT c.category_id, c.parent_id
+        FROM categories c
+        INNER JOIN category_tree ct ON ct.parent_id = c.category_id
+      )
+      SELECT * FROM category_tree WHERE category_id = $2;
+      `,
+      [parentId, childId]
+    );
+  
+    return result.rows.length > 0;
+  }
+  
 
 
   async editCategory({category_id, name, slug, parent_id, is_featured, is_active}) {

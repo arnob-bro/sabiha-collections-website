@@ -36,6 +36,8 @@ CREATE TABLE categories (
     category_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     name VARCHAR(150) UNIQUE NOT NULL,
     slug VARCHAR(150),
+    is_featured BOOLEAN DEFAULT FALSE,
+    is_active BOOLEAN DEFAULT FALSE,
     parent_id UUID REFERENCES categories(category_id) ON DELETE CASCADE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

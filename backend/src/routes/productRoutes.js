@@ -20,7 +20,8 @@ const createProductRouter = (productController) => {
   // multipart upload of multiple files (field name "images")
   router.post("/:product_id/images/upload", upload.array("images", 10), productController.uploadImages);
   router.post("/:product_id/images", productController.createImage); // create by URL
-  router.put("/:product_id/images/:image_id", productController.updateImage);
+  router.put("/:product_id/images/:image_id/upload",upload.single("image"), productController.updateImage);
+  router.put("/:product_id/images/:image_id", productController.updateImage);//update by URL
   router.delete("/:product_id/images/:image_id", productController.deleteImage);
 
   // Reviews

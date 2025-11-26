@@ -2,7 +2,7 @@
 const multer = require("multer");
 
 // Use disk storage (temporary files) — simplest approach
-const storage = multer.diskStorage({});
+const storage = multer.memoryStorage({});
 
 // File filter to allow only images
 const fileFilter = (req, file, cb) => {

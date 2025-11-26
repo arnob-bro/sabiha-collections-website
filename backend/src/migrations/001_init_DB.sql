@@ -51,7 +51,8 @@ CREATE TABLE products (
     price NUMERIC(10,2) NOT NULL,
     discount_price NUMERIC(10,2),
     is_active BOOLEAN DEFAULT TRUE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 
@@ -61,7 +62,8 @@ CREATE TABLE product_variants (
     color VARCHAR(20),
     sku VARCHAR(255),
     product_id UUID NOT NULL REFERENCES products(product_id) ON DELETE CASCADE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE product_images (
@@ -69,7 +71,8 @@ CREATE TABLE product_images (
     image_url TEXT NOT NULL,
     is_featured BOOLEAN DEFAULT FALSE,
     product_id UUID NOT NULL REFERENCES products(product_id) ON DELETE CASCADE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 
@@ -79,7 +82,8 @@ CREATE TABLE product_reviews (
     comment TEXT,
     user_id UUID NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
     product_id UUID NOT NULL REFERENCES products(product_id) ON DELETE CASCADE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE shopping_carts (

@@ -1,27 +1,8 @@
 @import "tailwindcss";
 
-:root {
-    --color-primary: 98 4 5;
-    --color-secondary: 245 238 213;
-    /* --color-primary: 255 193 7; Amber-500 */
-    /* --color-secondary: 99 102 241; Indigo-500 */
-    --color-text: 17 24 39; /* Gray-900 */
-}
-
-@layer base {
-    .text-primary {
-        color: rgb(var(--color-primary));
-    }
-    .bg-primary {
-        background-color: rgb(var(--color-primary));
-    }
-    .text-secondary {
-        color: rgb(var(--color-secondary));
-    }
-    .bg-secondary {
-        background-color: rgb(var(--color-secondary));
-    }
-    .text-main {
-        color: rgb(var(--color-text));
-    }
+@theme {
+    --color-primary: #620405;
+    --color-secondary: #e6d7c4;
+    --color-ternary: #8c0813;
+    --color-accent: #f2ebd5;
 }

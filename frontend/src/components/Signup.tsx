@@ -4,12 +4,14 @@ import { useMutation } from "@tanstack/react-query";
 import AuthApi from "../apiCalls/authApi";
 import type { User } from "../types/user";
 import { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
 
 const authApi = new AuthApi();
 
 export default function Signup() {
 	const [signupError, setSignupError] = useState<string | null>(null);
 	const [isSuccess, setIsSuccess] = useState(false);
+	const navigate = useNavigate();
 
 	const { mutate, isPending } = useMutation({
 		mutationFn: (user: User) => authApi.signup(user),
@@ -17,9 +19,9 @@ export default function Signup() {
 			if (data?.success) {
 				setIsSuccess(true);
 				setSignupError(null);
-				// Optionally redirect to login after a delay
+				// Redirect to login after a delay
 				setTimeout(() => {
-					// This will be handled by parent component (AccountPage) toggle
+					navigate("/login", { replace: true });
 				}, 2000);
 			} else {
 				setSignupError(data?.message || "Signup failed");
@@ -62,6 +64,17 @@ export default function Signup() {
 						⚠ {signupError}
 					</div>
 				)}
+
+				<div className="text-center mt-6">
+					<p className="text-gray-600">
+						Already have an account?{" "}
+						<Link
+							to="/login"
+							className="text-gray-900 hover:text-gray-700 underline font-medium">
+							Login
+						</Link>
+					</p>
+				</div>
 			</div>
 		</div>
 	);

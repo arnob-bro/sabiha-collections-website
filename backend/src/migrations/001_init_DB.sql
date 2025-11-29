@@ -58,9 +58,10 @@ CREATE TABLE products (
 
 CREATE TABLE product_variants (
     product_variant_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    size VARCHAR(5) NOT NULL,
-    color VARCHAR(20),
-    sku VARCHAR(255),
+    size JSONB NOT NULL,
+    color VARCHAR(20) NOT NULL,
+    sku VARCHAR(255) NOT NULL,
+    is_featured BOOLEAN DEFAULT FALSE,
     product_id UUID NOT NULL REFERENCES products(product_id) ON DELETE CASCADE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -69,8 +70,9 @@ CREATE TABLE product_variants (
 CREATE TABLE product_images (
     product_image_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     image_url TEXT NOT NULL,
-    is_featured BOOLEAN DEFAULT FALSE,
-    product_id UUID NOT NULL REFERENCES products(product_id) ON DELETE CASCADE,
+    is_featured_one BOOLEAN DEFAULT FALSE,
+    is_featured_two BOOLEAN DEFAULT FALSE,
+    product_variant_id UUID NOT NULL REFERENCES product_variants(product_variant_id) ON DELETE CASCADE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

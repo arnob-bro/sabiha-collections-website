@@ -2,10 +2,16 @@ import LoginForm from "./LoginForm"
 import Breadcrumbs from "./Breadcrumbs"
 import { useAuthStore } from "../store/authStore"
 import { useState } from "react"
+import { useNavigate, useLocation, Link } from "react-router-dom"
+import LoadingSpinner from "./LoadingSpinner"
 
 export default function Login() {
     const { login, isLoading, error } = useAuthStore()
     const [loginError, setLoginError] = useState<string | null>(null)
+
+    const navigate = useNavigate()
+    const location = useLocation()
+    const from = location.state?.from?.pathname || "/"
 
     const handleLogin = async (formData: {
         email: string
@@ -13,7 +19,11 @@ export default function Login() {
     }) => {
         setLoginError(null)
         const result = await login(formData.email, formData.password)
-        if (!result.success) {
+
+        if (result.success) {
+            // Navigate to where user came from, or to profile if no previous location
+            navigate(from !== "/login" ? from : "/profile", { replace: true })
+        } else {
             setLoginError(result.message || "Login failed")
         }
     }
@@ -28,10 +38,7 @@ export default function Login() {
                         <h2 className="text-center text-3xl mb-5 font-semibold">
                             Login to your account
                         </h2>
-                        <div className="flex flex-col items-center justify-center py-12">
-                            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mb-4"></div>
-                            <p className="text-gray-600">Logging in...</p>
-                        </div>
+                        <LoadingSpinner text="Logging in..." />
                     </div>
                 </div>
             </div>
@@ -60,6 +67,17 @@ export default function Login() {
                         ⚠ {loginError || error || "Login failed"}
                     </div>
                 )}
+
+                <div className="text-center mt-6">
+                    <p className="text-gray-600">
+                        Don't have an account?{" "}
+                        <Link
+                            to="/signup"
+                            className="text-gray-900 hover:text-gray-700 underline font-medium">
+                            Sign up
+                        </Link>
+                    </p>
+                </div>
             </div>
         </div>
     )

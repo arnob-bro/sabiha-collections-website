@@ -1,9 +1,9 @@
-import { useAuthStore } from "../../store/authStore"
-import Breadcrumbs from "../Breadcrumbs"
+import { useAuthStore } from "@/store/authStore"
+import Breadcrumbs from "@/components/Breadcrumbs"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
-import AuthApi from "../../apiCalls/authApi"
-import LoadingSpinner from "../LoadingSpinner"
+import AuthApi from "@/apiCalls/authApi"
+import LoadingSpinner from "@/components/LoadingSpinner"
 
 const authApi = new AuthApi()
 
@@ -57,8 +57,6 @@ export default function Profile() {
 
     return (
         <div>
-            <Breadcrumbs />
-
             <div className="py-20">
                 <div className="max-w-2xl mx-auto">
                     <h2 className="text-3xl font-semibold mb-8">My Profile</h2>

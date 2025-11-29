@@ -2,7 +2,7 @@ import type { AxiosInstance } from "axios"
 import type { ApiResponse } from "@/types/api"
 import { api } from "@/apiCalls/api"
 
-import type { Product } from "@/types/product"
+import type { Product, CreateProductDto } from "@/types/product"
 
 export default class ProductApi {
     private productApi: AxiosInstance
@@ -13,7 +13,7 @@ export default class ProductApi {
         this.baseURL = `${baseURL}/products`
     }
 
-    // GET /categories/all (flat list)
+    //! GET /products
     async getProducts(): Promise<ApiResponse<Product[]>> {
         try {
             const res = await this.productApi.get<ApiResponse<Product[]>>(
@@ -27,8 +27,8 @@ export default class ProductApi {
         }
     }
 
-    // POST /categories (create)
-    async createProduct(data: Product): Promise<ApiResponse<Product>> {
+    //! POST /products (create)
+    async createProduct(data: CreateProductDto): Promise<ApiResponse<Product>> {
         try {
             const res = await this.productApi.post<ApiResponse<Product>>(
                 `${this.baseURL}`,
@@ -37,7 +37,7 @@ export default class ProductApi {
             return res.data
         } catch (err: any) {
             throw new Error(
-                err.response?.data?.message || "Failed to create category"
+                err.response?.data?.message || "Failed to create product"
             )
         }
     }

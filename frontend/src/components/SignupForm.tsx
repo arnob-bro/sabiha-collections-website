@@ -151,12 +151,14 @@ export default function SignupForm({
                     type={showPassword ? "text" : "password"}
                     placeholder="Confirm password"
                     value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    onChange={(e) =>{
+                        setConfirmPassword(e.target.value)}
+                    } 
                     disabled={isLoading}
                     required
                     className="w-full pl-12 pr-10 py-3 rounded-xl border-2 border-gray-200 text-gray-800 focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 outline-none transition disabled:bg-gray-100"
                 />
-                <p className="text-red-500">Password doesn't match</p>
+
             </div>
 
             <button

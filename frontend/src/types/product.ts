@@ -64,3 +64,37 @@ export interface PaginationData {
     total: number
     totalPages: number
 }
+
+// Request body for creating a product
+export interface CreateProductDto {
+    name: string
+    slug?: string
+    price: number | string
+    description?: string
+    discount_price?: number | string
+    is_active?: boolean
+    category_id?: number
+    variants?: Array<{
+        size: string
+        color: string
+        sku: string
+    }>
+    images?: Array<
+        | string
+        | {
+              url: string
+              is_featured?: boolean
+          }
+    >
+}
+
+// Request body for updating a product
+export interface UpdateProductDto {
+    name?: string
+    slug?: string
+    price?: number | string
+    description?: string
+    discount_price?: number | string
+    is_active?: boolean
+    category_id?: number
+}

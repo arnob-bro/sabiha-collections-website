@@ -5,7 +5,8 @@ export const AdminDashboard = () => {
                 Admin Dashboard
             </h1>
             <p className="text-sm text-gray-600">
-                la la la la laaaaaa lalalalla allalalalala laaaaaaaa
+                This is admin dashboard... la la la la laaaaaa lalalalla
+                allalalalala laaaaaaaa
             </p>
         </div>
     )

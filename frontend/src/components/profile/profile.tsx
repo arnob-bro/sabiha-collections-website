@@ -1,7 +1,9 @@
 import { useAuthStore } from "../../store/authStore"
 import Breadcrumbs from "../Breadcrumbs"
 import { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
 import AuthApi from "../../apiCalls/authApi"
+import LoadingSpinner from "../LoadingSpinner"
 
 const authApi = new AuthApi()
 
@@ -9,6 +11,7 @@ export default function Profile() {
     const { user, logout, setUser, isLoading: authLoading } = useAuthStore()
     const [profileData, setProfileData] = useState<any>(null)
     const [isLoading, setIsLoading] = useState(true)
+    const navigate = useNavigate()
 
     useEffect(() => {
         // If we already have user data with all fields, we might not need to fetch
@@ -37,7 +40,7 @@ export default function Profile() {
 
     const handleLogout = async () => {
         await logout()
-        // The AccountPage will automatically show login/signup after logout
+        navigate("/login", { replace: true })
     }
 
     // Show loading if auth is loading or profile is loading
@@ -45,12 +48,7 @@ export default function Profile() {
         return (
             <div>
                 <Breadcrumbs />
-                <div className="py-20 flex items-center justify-center">
-                    <div className="text-center">
-                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto"></div>
-                        <p className="mt-4 text-gray-600">Loading profile...</p>
-                    </div>
-                </div>
+                <LoadingSpinner text="Loading profile..." />
             </div>
         )
     }

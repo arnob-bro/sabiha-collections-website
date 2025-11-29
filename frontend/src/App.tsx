@@ -8,9 +8,9 @@ import SignupPage from "./pages/SignupPage"
 import ProfilePage from "./pages/ProfilePage"
 import RequireAuth from "./components/RequireAuth"
 import AdminPage from "./pages/AdminPage"
-import { CategoryManager } from "./components/Admin/CategoryManager"
+import { CategoryManager } from "./components/Admin/Category/CategoryManager"
 import { AdminDashboard } from "./components/Admin/AdminDashboard"
-import { ProductManager } from "./components/Admin/ProductManager"
+import { ProductManager } from "./components/Admin/Product/ProductManager"
 
 export default function App() {
     return (

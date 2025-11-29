@@ -1,7 +1,7 @@
 // import { ChevronDown } from "lucide-react"
 import { Link } from "react-router-dom"
 
-export default function NavLinks() {
+export default function Categories() {
     return (
         <nav className="flex gap-10 mx-auto w-fit font-bold tracking-wider">
             <Link

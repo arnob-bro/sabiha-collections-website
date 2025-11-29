@@ -20,7 +20,7 @@ export default function HomePage() {
                         backgroundImage:
                             "url(https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1600&q=80)",
                     }}>
-                    <div className="absolute inset-0 bg-gradient-to-r from-background/90 to-background/50" />
+                    <div className="absolute inset-0 bg-gradient-to-l from-background/50 to-black/80" />
                 </div>
 
                 <div className="relative container mx-auto px-4 h-full flex items-center">
@@ -33,10 +33,10 @@ export default function HomePage() {
                             clothing for everyone.
                         </p>
                         <div className="flex gap-4">
-                            <button>
+                            <button className="black-button bg-pink-500">
                                 <Link to="/category/women">Shop Women</Link>
                             </button>
-                            <button>
+                            <button className="black-button bg-secondary text-black">
                                 <Link to="/category/men">Shop Men</Link>
                             </button>
                         </div>

@@ -5,7 +5,7 @@ import { Link } from "react-router-dom"
 import { useState } from "react"
 import { FiMenu } from "react-icons/fi"
 import { useAuthStore } from "../store/authStore"
-import NavLinks from "./NavLinks"
+import Categories from "./Categories"
 
 export default function Navbar() {
     const [menuOpen, setMenuOpen] = useState<boolean>(false)
@@ -130,9 +130,9 @@ export default function Navbar() {
                 </div>
             </div>
 
-            {/* Desktop view - Nav ribbon */}
-            <div className="hidden md:block py-5 bg-white shadow-lg">
-                <NavLinks />
+            {/* Desktop view - Categories ribbon */}
+            <div className="hidden md:block py-2 bg-white shadow-lg">
+                <Categories />
             </div>
         </div>
     )

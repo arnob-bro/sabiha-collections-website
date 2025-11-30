@@ -1,4 +1,4 @@
-// src/middleware/upload.js
+// src/middlewares/upload.js
 const multer = require("multer");
 
 // Use disk storage (temporary files) — simplest approach

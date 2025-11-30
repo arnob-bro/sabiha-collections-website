@@ -95,43 +95,37 @@ The product management system follows a three-tier architecture:
    - Commits transaction or rolls back on error
 4. Returns created product object (without variants/images in response)
 
-#### Request Body
+#### Response Body
 ```json
 {
-  "name": "Classic T-Shirt",
-  "slug": "classic-t-shirt",
-  "description": "Comfortable cotton t-shirt",
-  "price": 29.99,
-  "discount_price": 24.99,
-  "is_active": true,
-  "category_id": 5,
-  "variants": [
-    { "size": "M", "color": "Blue", "sku": "TSH-M-BLU" },
-    { "size": "L", "color": "Blue", "sku": "TSH-L-BLU" }
-  ],
-  "images": [
-    { "url": "https://example.com/img1.jpg", "is_featured": true },
-    "https://example.com/img2.jpg"
-  ]
+    "success": true,
+    "product": {
+        "product_id": "5fedc8dd-32cd-4b50-b566-1e4355ea7690",
+        "category_id": null,
+        "name": "Classic Hoodie",
+        "slug": "classic-hoodie",
+        "description": "Soft premium cotton hoodie",
+        "price": "1500.00",
+        "discount_price": "2009.00",
+        "is_active": true,
+        "created_at": "2025-11-29T20:30:54.010Z",
+        "updated_at": "2025-11-29T20:30:54.010Z"
+    }
 }
 ```
 
-#### Response (201 Created)
+#### Request (201 Created)
 ```json
 {
-  "success": true,
-  "product": {
-    "product_id": 42,
-    "name": "Classic T-Shirt",
-    "slug": "classic-t-shirt",
-    "price": "29.99",
-    "discount_price": "24.99",
-    "is_active": true,
-    "category_id": 5,
-    "created_at": "2025-01-15T10:30:00Z",
-    "updated_at": "2025-01-15T10:30:00Z"
-  }
+  "name": "Classic Hoodie",
+  "slug": "classic-hoodie",
+  "description": "Soft premium cotton hoodie",
+  "price": 1500,
+  "discount_price": 2009,
+  "is_active": true,
+  "category_id": null
 }
+
 ```
 
 #### Error Responses
@@ -700,7 +694,6 @@ const uploadBuffer = (buffer, options) => {
 
 module.exports = { cloudinary, uploadBuffer };
 ```
-Here you go — a clean, concise description in the same style and structure as the one you provided:
 
 ---
 

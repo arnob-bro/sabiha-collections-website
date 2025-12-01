@@ -30,7 +30,7 @@ export default function ProductCard() {
                     <p>৳ 4,260</p>
                     <p className="line-through text-red-500">৳ 5,199</p>
                 </div>
-                <button className="w-full bg-amber-600 text-white py-2 my-2 rounded hover:bg-amber-700 duration-300 cursor-pointer">
+                <button className="w-full bg-primary text-white py-2 my-2 rounded hover:bg-red-900 duration-300 cursor-pointer">
                     Add to Cart
                 </button>
             </div>

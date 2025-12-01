@@ -1,14 +1,14 @@
 import type { AxiosInstance } from "axios"
-import { api } from "./api"
+import { api } from "@/apiCalls/api"
 
 import type {
     Category,
     CategoryTreeNode,
     CreateCategoryDto,
     UpdateCategoryDto,
-} from "../types/category"
+} from "@/types/category"
 
-import type { ApiResponse } from "../types/api"
+import type { ApiResponse } from "@/types/api"
 
 export default class CategoryApi {
     private categoryApi: AxiosInstance

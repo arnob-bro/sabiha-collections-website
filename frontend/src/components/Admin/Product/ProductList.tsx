@@ -1,4 +1,4 @@
-import type { Product } from "../../../types/product"
+import type { Product } from "@/types/product"
 
 interface ProductListProps {
     products: Product[]
@@ -12,10 +12,7 @@ export function ProductList({ products, onEdit }: ProductListProps) {
                 <thead className="bg-gray-50">
                     <tr>
                         <th className="px-4 py-2 text-left font-semibold text-gray-700">
-                            ID
-                        </th>
-                        <th className="px-4 py-2 text-left font-semibold text-gray-700">
-                            Name
+                            Product
                         </th>
                         <th className="px-4 py-2 text-left font-semibold text-gray-700">
                             Slug
@@ -27,10 +24,10 @@ export function ProductList({ products, onEdit }: ProductListProps) {
                             Discount Price
                         </th>
                         <th className="px-4 py-2 text-left font-semibold text-gray-700">
-                            Category
+                            Quantity
                         </th>
                         <th className="px-4 py-2 text-left font-semibold text-gray-700">
-                            Active
+                            Status
                         </th>
                         {onEdit && (
                             <th className="px-4 py-2 text-right font-semibold text-gray-700">
@@ -43,11 +40,7 @@ export function ProductList({ products, onEdit }: ProductListProps) {
                     {products.map((product) => (
                         <tr key={product.product_id} className="shadow-sm">
                             <td className="px-4 py-2">
-                                <div className="font-medium text-gray-900">
-                                    {product.product_id}
-                                </div>
-                            </td>
-                            <td className="px-4 py-2">
+                                {/* Product - image, slug, name, etc all in one TD */}
                                 <div className="font-medium text-gray-900">
                                     {product.name}
                                 </div>
@@ -56,9 +49,10 @@ export function ProductList({ products, onEdit }: ProductListProps) {
                                 {product.slug}
                             </td>
                             <td className="px-4 py-2 text-gray-700">
-                                ${product.price}
+                                {/* Slug */}${product.price}
                             </td>
                             <td className="px-4 py-2 text-gray-700">
+                                {/* price */}
                                 {product.discount_price ? (
                                     <span className="text-green-600 font-medium">
                                         ${product.discount_price}
@@ -104,4 +98,3 @@ export function ProductList({ products, onEdit }: ProductListProps) {
         </div>
     )
 }
-

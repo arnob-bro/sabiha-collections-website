@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom"
-import { AdminSidebar } from "../components/Admin/AdminSidebar"
-import Header from "../components/Header"
-import Footer from "../components/Footer"
+import { AdminSidebar } from "@/components/Admin/AdminSidebar"
+import Header from "@/components/Header/Header"
+import Footer from "@/components/Footer"
 
 export default function AdminPage() {
     return (

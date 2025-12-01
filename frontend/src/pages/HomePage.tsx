@@ -1,9 +1,9 @@
-import Header from "../components/Header"
-import Footer from "../components/Footer"
-import { mockProducts } from "../data/mockProducts"
+import Header from "@/components/Header/Header"
+import Footer from "@/components/Footer"
+import { mockProducts } from "@/data/mockProducts"
 import { Link } from "react-router-dom"
-import type { Product } from "../types/product"
-import ProductCard from "../components/ProductCard"
+import type { Product } from "@/types/product"
+import ProductCard from "@/components/ProductCard"
 
 export default function HomePage() {
     const featuredProducts: Product[] = mockProducts.slice(0, 4)
@@ -17,8 +17,7 @@ export default function HomePage() {
                 <div
                     className="absolute inset-0 bg-cover bg-center"
                     style={{
-                        backgroundImage:
-                            "url(https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1600&q=80)",
+                        backgroundImage: "url(banner.jpg)",
                     }}>
                     <div className="absolute inset-0 bg-gradient-to-l from-background/50 to-black/80" />
                 </div>
@@ -45,9 +44,9 @@ export default function HomePage() {
             </section>
 
             {/* Free Delivery Banner */}
-            <section className="bg-amber-500 text-primary-foreground py-4">
+            <section className="bg-white inset-2 shadow-2xl text-gray-700 py-4">
                 <div className="container mx-auto px-4 text-center">
-                    <p className="font-medium">
+                    <p className="font-medium animate-pulse">
                         🎉 Free Delivery on Orders Over ৳1499
                     </p>
                 </div>

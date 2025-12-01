@@ -3,15 +3,18 @@ import type {
     Category,
     CreateCategoryDto,
     UpdateCategoryDto,
-} from "../../../types/category"
-import LoadingSpinner from "../../LoadingSpinner"
-import { CategoryForm, type CategoryFormState } from "./CategoryForm"
-import { CategoryList } from "./CategoryList"
-import { useCategories } from "../../../hooks/useCategories"
+} from "@/types/category"
+import LoadingSpinner from "@/components/LoadingSpinner"
+import {
+    CategoryForm,
+    type CategoryFormState,
+} from "@/components/Admin/Category/CategoryForm"
+import { CategoryList } from "@/components/Admin/Category/CategoryList"
+import { useCategories } from "@/hooks/useCategories"
 
 type Mode = "list" | "create" | "edit"
 
-export function CategoryManager() {
+export default function CategoryManager() {
     const [formError, setFormError] = useState<string | null>(null)
 
     const [mode, setMode] = useState<Mode>("list")

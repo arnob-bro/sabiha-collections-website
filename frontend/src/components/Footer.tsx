@@ -2,13 +2,13 @@ import { FaFacebook, FaInstagram, FaTwitter, FaGithub } from "react-icons/fa"
 
 export default function Footer() {
     return (
-        <footer className="bg-black text-gray-300 py-8 mt-10 px-5 sm:px-10 md:px-32 ">
+        <footer className="bg-primary text-gray-300 py-8 mt-10 px-5 sm:px-10 md:px-32">
             <div className="container grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div>
                     <h2 className="text-xl font-bold text-white tracking-wider">
                         Sabiha Collections
                     </h2>
-                    <p className="mt-2 text-sm text-gray-400">
+                    <p className="mt-2 text-sm text-gray-300">
                         Sabiha Collections is not just another clothing brand,
                         but an innovative brand inspired by the future of
                         fashion and charmed by traditional colors, art and

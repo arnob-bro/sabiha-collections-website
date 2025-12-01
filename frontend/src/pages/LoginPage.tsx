@@ -1,6 +1,6 @@
-import Header from "../components/Header"
-import Footer from "../components/Footer"
-import Login from "../components/Login"
+import Header from "@/components/Header/Header"
+import Footer from "@/components/Footer"
+import Login from "@/components/Login"
 
 export default function LoginPage() {
     return (
@@ -13,4 +13,3 @@ export default function LoginPage() {
         </div>
     )
 }
-

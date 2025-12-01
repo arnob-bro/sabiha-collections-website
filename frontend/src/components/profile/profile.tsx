@@ -1,5 +1,4 @@
 import { useAuthStore } from "@/store/authStore"
-import Breadcrumbs from "@/components/Breadcrumbs"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import AuthApi from "@/apiCalls/authApi"
@@ -14,10 +13,7 @@ export default function Profile() {
     const navigate = useNavigate()
 
     useEffect(() => {
-        // If we already have user data with all fields, we might not need to fetch
-        // But we'll fetch anyway to get the latest data and permissions
         const fetchProfile = async () => {
-            // If auth is still loading (e.g., during login), wait a bit
             if (authLoading) {
                 return
             }
@@ -43,12 +39,12 @@ export default function Profile() {
         navigate("/login", { replace: true })
     }
 
-    // Show loading if auth is loading or profile is loading
     if (authLoading || isLoading) {
         return (
-            <div>
-                <Breadcrumbs />
-                <LoadingSpinner text="Loading profile..." />
+            <div className="bg-white rounded-lg border border-gray-200 shadow-md p-8">
+                <div className="flex items-center justify-center py-12">
+                    <LoadingSpinner text="Loading profile..." />
+                </div>
             </div>
         )
     }
@@ -56,76 +52,103 @@ export default function Profile() {
     const displayUser = profileData?.user || user
 
     return (
-        <div>
-            <div className="py-20">
-                <div className="max-w-2xl mx-auto">
-                    <h2 className="text-3xl font-semibold mb-8">My Profile</h2>
+        <div className="bg-white rounded-lg border border-gray-200 shadow-md p-8 max-w-6xl">
+            <div className="space-y-8">
+                {/* Header */}
+                <div className="border-b border-gray-200 pb-4">
+                    <h2 className="text-2xl font-semibold text-gray-900">
+                        My Profile
+                    </h2>
+                    <p className="text-sm text-gray-500 mt-1">
+                        View and manage your account information
+                    </p>
+                </div>
 
-                    <div className="bg-white rounded-lg shadow-md p-6 space-y-6">
-                        {/* User Info */}
-                        <div className="space-y-4">
-                            <div>
-                                <label className="text-sm font-medium text-gray-500">
-                                    Email
-                                </label>
-                                <p className="text-lg text-gray-900 mt-1">
-                                    {displayUser?.email || "N/A"}
+                {/* Profile Information Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* Email */}
+                    <div className="space-y-2">
+                        <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                            Email Address
+                        </label>
+                        <div className="p-3 bg-gray-50 rounded-md border border-gray-200">
+                            <p className="text-base text-gray-900 font-medium">
+                                {displayUser?.email || "N/A"}
+                            </p>
+                        </div>
+                    </div>
+
+                    {/* Role */}
+                    {displayUser?.role && (
+                        <div className="space-y-2">
+                            <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                                Role
+                            </label>
+                            <div className="p-3 bg-gray-50 rounded-md border border-gray-200">
+                                <p className="text-base text-gray-900 font-medium capitalize">
+                                    {displayUser.role}
                                 </p>
                             </div>
-
-                            {displayUser?.first_name && (
-                                <div>
-                                    <label className="text-sm font-medium text-gray-500">
-                                        First Name
-                                    </label>
-                                    <p className="text-lg text-gray-900 mt-1">
-                                        {displayUser.first_name}
-                                    </p>
-                                </div>
-                            )}
-
-                            {displayUser?.last_name && (
-                                <div>
-                                    <label className="text-sm font-medium text-gray-500">
-                                        Last Name
-                                    </label>
-                                    <p className="text-lg text-gray-900 mt-1">
-                                        {displayUser.last_name}
-                                    </p>
-                                </div>
-                            )}
-
-                            {displayUser?.phone && (
-                                <div>
-                                    <label className="text-sm font-medium text-gray-500">
-                                        Phone
-                                    </label>
-                                    <p className="text-lg text-gray-900 mt-1">
-                                        {displayUser.phone}
-                                    </p>
-                                </div>
-                            )}
-
-                            {displayUser?.role && (
-                                <div>
-                                    <label className="text-sm font-medium text-gray-500">
-                                        Role
-                                    </label>
-                                    <p className="text-lg text-gray-900 mt-1 capitalize">
-                                        {displayUser.role}
-                                    </p>
-                                </div>
-                            )}
                         </div>
+                    )}
 
-                        {/* Logout Button */}
-                        <div className="pt-6 border-t border-gray-200">
-                            <button
-                                onClick={handleLogout}
-                                className="px-6 py-3 bg-black hover:bg-gray-800 text-white rounded-lg font-medium transition-colors duration-200">
-                                Logout
-                            </button>
+                    {/* First Name */}
+                    {displayUser?.first_name && (
+                        <div className="space-y-2">
+                            <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                                First Name
+                            </label>
+                            <div className="p-3 bg-gray-50 rounded-md border border-gray-200">
+                                <p className="text-base text-gray-900 font-medium">
+                                    {displayUser.first_name}
+                                </p>
+                            </div>
                         </div>
+                    )}
+
+                    {/* Last Name */}
+                    {displayUser?.last_name && (
+                        <div className="space-y-2">
+                            <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                                Last Name
+                            </label>
+                            <div className="p-3 bg-gray-50 rounded-md border border-gray-200">
+                                <p className="text-base text-gray-900 font-medium">
+                                    {displayUser.last_name}
+                                </p>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Phone */}
+                    {displayUser?.phone && (
+                        <div className="space-y-2">
+                            <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                                Phone Number
+                            </label>
+                            <div className="p-3 bg-gray-50 rounded-md border border-gray-200">
+                                <p className="text-base text-gray-900 font-medium">
+                                    {displayUser.phone}
+                                </p>
+                            </div>
+                        </div>
+                    )}
+                </div>
+
+                {/* Logout Section */}
+                <div className="pt-6 border-t border-gray-200">
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <h3 className="text-sm font-semibold text-gray-900">
+                                Account Actions
+                            </h3>
+                            <p className="text-xs text-gray-500 mt-1">
+                                Sign out of your account
+                            </p>
+                        </div>
+                        <button onClick={handleLogout} className="black-button">
+                            Logout
+                        </button>
                     </div>
                 </div>
             </div>

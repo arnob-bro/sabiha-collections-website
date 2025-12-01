@@ -1,8 +1,13 @@
 import type { AxiosInstance } from "axios"
-import type { ApiResponse } from "@/types/api"
 import { api } from "@/apiCalls/api"
 
-import type { Product, CreateProductDto } from "@/types/product"
+import type {
+    CreateProductDto,
+    CreateProductResponse,
+    CreateVariantDto,
+    CreateVariantResponse,
+    ProductListResponse,
+} from "@/types/product"
 
 export default class ProductApi {
     private productApi: AxiosInstance
@@ -14,11 +19,9 @@ export default class ProductApi {
     }
 
     //! GET /products
-    async getProducts(): Promise<ApiResponse<Product[]>> {
+    async getAllProducts(): Promise<ProductListResponse> {
         try {
-            const res = await this.productApi.get<ApiResponse<Product[]>>(
-                this.baseURL
-            )
+            const res = await this.productApi.get(this.baseURL)
             return res.data
         } catch (err: any) {
             throw new Error(
@@ -27,13 +30,12 @@ export default class ProductApi {
         }
     }
 
-    //! POST /products (create)
-    async createProduct(data: CreateProductDto): Promise<ApiResponse<Product>> {
+    // ! POST /products (create)
+    async createProduct(
+        data: CreateProductDto
+    ): Promise<CreateProductResponse> {
         try {
-            const res = await this.productApi.post<ApiResponse<Product>>(
-                `${this.baseURL}`,
-                data
-            )
+            const res = await this.productApi.post(`${this.baseURL}`, data)
             return res.data
         } catch (err: any) {
             throw new Error(
@@ -41,4 +43,22 @@ export default class ProductApi {
             )
         }
     }
+
+    async createVariant(
+        data: CreateVariantDto
+    ): Promise<CreateVariantResponse> {
+        try {
+            const res = await this.productApi.post(
+                `${this.baseURL}/${data.product_id}`,
+                data
+            )
+            return res.data
+        } catch (err: any) {
+            throw new Error(
+                err.response?.data?.message || "Failed to create variant"
+            )
+        }
+    }
+
+    async uploadImage() {}
 }

@@ -46,7 +46,7 @@ CREATE TABLE products (
     product_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     category_id UUID REFERENCES categories(category_id),
     name VARCHAR(150) UNIQUE NOT NULL,
-    slug VARCHAR(150),
+    slug VARCHAR(150) UNIQUE NOT NULL,
     description TEXT,
     price NUMERIC(10,2) NOT NULL,
     discount_price NUMERIC(10,2),

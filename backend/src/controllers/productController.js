@@ -189,6 +189,16 @@ class ProductController {
       if (!req.files || req.files.length === 0)
         return res.status(400).json({ error: "No images uploaded" });
 
+       // Get featured flags from form-data body
+    const is_featured_one = req.body.is_featured_one === "true";
+    const is_featured_two = req.body.is_featured_two === "true";
+
+    // Validation: Cannot be BOTH true
+    if (is_featured_one && is_featured_two) {
+      return res.status(400).json({
+        error: "An image cannot be both featured_one and featured_two"
+      });
+    }
       const uploadPromises = req.files.map(file => {
         return uploadBuffer(file.buffer, {
           folder: process.env.CLOUDINARY_FOLDER || "products",
@@ -203,8 +213,8 @@ class ProductController {
       const imagesToSave = uploadedResults.map(r => ({
         image_url: r.secure_url,
         public_id: r.public_id,
-        is_featured_one: false,
-        is_featured_two: false
+        is_featured_one,
+        is_featured_two
       }));
 
       const saved = await this.productService.addProductImages(variant_id, imagesToSave);
@@ -220,7 +230,11 @@ class ProductController {
       const { variant_id } = req.params;
       const { image_url, public_id = null, is_featured_one = false, is_featured_two = false } = req.body;
       if (!image_url) return res.status(400).json({ error: "image_url required" });
-
+if (is_featured_one && is_featured_two) {
+      return res.status(400).json({
+        error: "An image cannot be both featured_one and featured_two"
+      });
+    }
       const saved = await this.productService.addProductImages(variant_id, [{ image_url, public_id, is_featured_one, is_featured_two }]);
       res.status(201).json({ success: true, image: saved[0] });
     } catch (err) {

@@ -579,7 +579,25 @@ GET /products?page=2&limit=10&search=shirt&minPrice=20&maxPrice=50&sort=price_as
 POST /products/42/images/upload
 Content-Type: multipart/form-data
 
+for testing the upload from postman:-
+Postman → Body → form-data
+
+| Key             | Type | Value        |
+| --------------- | ---- | ------------ |
+| images          | File | choose image |
+| is_featured_one | Text | true         |
+| is_featured_two | Text | false        |
+
 images: [File1.jpg, File2.png]
+
+
+| Form Input                 | Saved in DB? | Output        |
+| -------------------------- | ------------ | ------------- |
+| is_featured_one = true     | Yes          | Featured One  |
+| is_featured_two = true     | Yes          | Featured Two  |
+| both false or not provided | Yes          | Normal image  |
+| both true                  | ❌ Rejected   | Error message |
+
 ```
 
 #### Response (201 Created)

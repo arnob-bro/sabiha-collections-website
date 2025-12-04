@@ -1,12 +1,19 @@
-import { useState, type FormEvent, ChangeEvent } from "react"
+import { useState, type FormEvent, type ChangeEvent } from "react"
 import { useCategories } from "@/hooks/useCategories"
+
+export type VariantImage = {
+    id: string
+    file?: File
+    url?: string
+    is_featured_on: boolean
+}
 
 type VariantInput = {
     color: string
     sku: string
     is_featured: boolean
     sizes: string[]
-    images: File[]
+    images: VariantImage[]
 }
 
 export type ProductFormValues = {
@@ -23,9 +30,10 @@ export type ProductFormValues = {
 
 interface ProductFormProps {
     onSubmit?: (values: ProductFormValues) => void
+    isSubmitting?: boolean
 }
 
-const SIZES = ["S", "M", "L"]
+const SIZES = ["XS", "S", "M", "L", "XL", "XXL", "XXXL", "XXXXL"]
 
 function slugify(value: string) {
     return value
@@ -36,7 +44,10 @@ function slugify(value: string) {
         .replace(/-+/g, "-")
 }
 
-export default function ProductFormComponent({ onSubmit }: ProductFormProps) {
+export default function ProductFormComponent({
+    onSubmit,
+    isSubmitting = false,
+}: ProductFormProps) {
     const { categories, isLoading } = useCategories()
 
     const [form, setForm] = useState<ProductFormValues>({
@@ -56,7 +67,11 @@ export default function ProductFormComponent({ onSubmit }: ProductFormProps) {
             HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
         >
     ) => {
-        const { name, value, type, checked } = e.target
+        const { name, value, type } = e.target
+        const checked =
+            type === "checkbox"
+                ? (e.target as HTMLInputElement).checked
+                : undefined
 
         setForm((prev) => ({
             ...prev,
@@ -92,7 +107,7 @@ export default function ProductFormComponent({ onSubmit }: ProductFormProps) {
     const updateVariantField = (
         index: number,
         field: keyof VariantInput,
-        value: string | boolean | File[]
+        value: string | boolean | VariantImage[]
     ) => {
         setForm((prev) => {
             const next = [...prev.variants]
@@ -115,9 +130,86 @@ export default function ProductFormComponent({ onSubmit }: ProductFormProps) {
         })
     }
 
+    const toggleAllSizes = (index: number) => {
+        setForm((prev) => {
+            const next = [...prev.variants]
+            const currentSizes = next[index].sizes
+            const allSelected = SIZES.every((s) => currentSizes.includes(s))
+
+            next[index] = {
+                ...next[index],
+                sizes: allSelected ? [] : [...SIZES],
+            }
+            return { ...prev, variants: next }
+        })
+    }
+
     const handleVariantImages = (index: number, files: FileList | null) => {
         if (!files) return
-        updateVariantField(index, "images", Array.from(files))
+        const newImages: VariantImage[] = Array.from(files).map((file) => ({
+            id: Math.random().toString(36).substring(7),
+            file,
+            is_featured_on: false,
+        }))
+
+        setForm((prev) => {
+            const next = [...prev.variants]
+            next[index] = {
+                ...next[index],
+                images: [...next[index].images, ...newImages],
+            }
+            return { ...prev, variants: next }
+        })
+    }
+
+    const handleVariantImageUrl = (index: number, url: string) => {
+        if (!url) return
+        const newImage: VariantImage = {
+            id: Math.random().toString(36).substring(7),
+            url,
+            is_featured_on: false,
+        }
+
+        setForm((prev) => {
+            const next = [...prev.variants]
+            next[index] = {
+                ...next[index],
+                images: [...next[index].images, newImage],
+            }
+            return { ...prev, variants: next }
+        })
+    }
+
+    const removeVariantImage = (variantIndex: number, imageId: string) => {
+        setForm((prev) => {
+            const next = [...prev.variants]
+            next[variantIndex] = {
+                ...next[variantIndex],
+                images: next[variantIndex].images.filter(
+                    (img) => img.id !== imageId
+                ),
+            }
+            return { ...prev, variants: next }
+        })
+    }
+
+    const toggleImageProperty = (
+        variantIndex: number,
+        imageId: string,
+        property: keyof VariantImage
+    ) => {
+        setForm((prev) => {
+            const next = [...prev.variants]
+            next[variantIndex] = {
+                ...next[variantIndex],
+                images: next[variantIndex].images.map((img) =>
+                    img.id === imageId
+                        ? { ...img, [property]: !img[property] }
+                        : img
+                ),
+            }
+            return { ...prev, variants: next }
+        })
     }
 
     const handleSubmit = (e: FormEvent) => {
@@ -290,7 +382,7 @@ export default function ProductFormComponent({ onSubmit }: ProductFormProps) {
                                 key={index}
                                 className="border border-gray-200 rounded-md p-4 bg-gray-50 space-y-4">
                                 <div className="flex items-center justify-between">
-                                    <h4 className="text-sm font-semibold text-gray-900">
+                                    <h4 className="text-sm font-semibold text-gray-900 bg-yellow-500 px-3 py-1 rounded-full">
                                         Variant {index + 1}
                                     </h4>
                                 </div>
@@ -361,9 +453,23 @@ export default function ProductFormComponent({ onSubmit }: ProductFormProps) {
 
                                 {/* Sizes */}
                                 <div className="space-y-1">
-                                    <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide">
-                                        Sizes
-                                    </label>
+                                    <div className="flex items-center justify-between">
+                                        <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                                            Sizes
+                                        </label>
+                                        <button
+                                            type="button"
+                                            onClick={() =>
+                                                toggleAllSizes(index)
+                                            }
+                                            className="text-xs text-primary hover:underline">
+                                            {SIZES.every((s) =>
+                                                variant.sizes.includes(s)
+                                            )
+                                                ? "Deselect All"
+                                                : "Select All"}
+                                        </button>
+                                    </div>
                                     <div className="flex flex-wrap gap-3 mt-1">
                                         {SIZES.map((size) => (
                                             <label
@@ -389,22 +495,138 @@ export default function ProductFormComponent({ onSubmit }: ProductFormProps) {
                                 </div>
 
                                 {/* Images */}
-                                <div className="space-y-1">
+                                <div className="space-y-2">
                                     <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide">
                                         Images
                                     </label>
-                                    <input
-                                        type="file"
-                                        multiple
-                                        accept="image/*"
-                                        onChange={(e) =>
-                                            handleVariantImages(
-                                                index,
-                                                e.target.files
-                                            )
-                                        }
-                                        className="block w-full text-xs text-gray-500 file:mr-3 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-gray-900 file:text-white hover:file:bg-black"
-                                    />
+
+                                    {/* Image List */}
+                                    {variant.images.length > 0 && (
+                                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                                            {variant.images.map((img) => (
+                                                <div
+                                                    key={img.id}
+                                                    className="relative group border border-gray-200 rounded-md p-2 bg-white">
+                                                    <div className="aspect-square bg-gray-100 rounded-md overflow-hidden mb-2 flex items-center justify-center">
+                                                        {img.file ? (
+                                                            <img
+                                                                src={URL.createObjectURL(
+                                                                    img.file
+                                                                )}
+                                                                alt="Preview"
+                                                                className="w-full h-full object-cover"
+                                                            />
+                                                        ) : (
+                                                            <img
+                                                                src={img.url}
+                                                                alt="Preview"
+                                                                className="w-full h-full object-cover"
+                                                                onError={(e) =>
+                                                                    ((
+                                                                        e.target as HTMLImageElement
+                                                                    ).src =
+                                                                        "https://placehold.co/100?text=Invalid+URL")
+                                                                }
+                                                            />
+                                                        )}
+                                                    </div>
+                                                    <div className="space-y-1">
+                                                        <label className="flex items-center gap-1.5 text-[10px] text-gray-600 cursor-pointer">
+                                                            <input
+                                                                type="checkbox"
+                                                                checked={
+                                                                    img.is_featured_on
+                                                                }
+                                                                onChange={() =>
+                                                                    toggleImageProperty(
+                                                                        index,
+                                                                        img.id,
+                                                                        "is_featured_on"
+                                                                    )
+                                                                }
+                                                                className="h-3 w-3 rounded border-gray-300 text-primary focus:ring-primary/70"
+                                                            />
+                                                            Featured
+                                                        </label>
+                                                    </div>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() =>
+                                                            removeVariantImage(
+                                                                index,
+                                                                img.id
+                                                            )
+                                                        }
+                                                        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity shadow-sm"
+                                                        title="Remove image">
+                                                        <svg
+                                                            className="w-3 h-3"
+                                                            fill="none"
+                                                            stroke="currentColor"
+                                                            viewBox="0 0 24 24">
+                                                            <path
+                                                                strokeLinecap="round"
+                                                                strokeLinejoin="round"
+                                                                strokeWidth="2"
+                                                                d="M6 18L18 6M6 6l12 12"
+                                                            />
+                                                        </svg>
+                                                    </button>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+
+                                    <div className="flex flex-col md:flex-row gap-3">
+                                        <div className="flex-1">
+                                            <input
+                                                type="file"
+                                                multiple
+                                                accept="image/*"
+                                                onChange={(e) =>
+                                                    handleVariantImages(
+                                                        index,
+                                                        e.target.files
+                                                    )
+                                                }
+                                                className="gray-button"
+                                            />
+                                        </div>
+                                        <div className="flex-1 flex gap-2">
+                                            <input
+                                                type="text"
+                                                placeholder="Or paste image URL"
+                                                className="flex-1 px-3 py-2 rounded-md border border-gray-300 bg-white focus:outline-none focus:ring-2 focus:ring-primary/70 focus:border-primary/70 text-xs"
+                                                onKeyDown={(e) => {
+                                                    if (e.key === "Enter") {
+                                                        e.preventDefault()
+                                                        handleVariantImageUrl(
+                                                            index,
+                                                            e.currentTarget
+                                                                .value
+                                                        )
+                                                        e.currentTarget.value =
+                                                            ""
+                                                    }
+                                                }}
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={(e) => {
+                                                    const input = e
+                                                        .currentTarget
+                                                        .previousElementSibling as HTMLInputElement
+                                                    handleVariantImageUrl(
+                                                        index,
+                                                        input.value
+                                                    )
+                                                    input.value = ""
+                                                }}
+                                                className="px-3 py-2 bg-gray-100 text-gray-700 rounded-md text-xs font-medium hover:bg-gray-200 border border-gray-300">
+                                                Add
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         ))}
@@ -413,8 +635,11 @@ export default function ProductFormComponent({ onSubmit }: ProductFormProps) {
 
                 {/* Submit (parent will handle actual logic) */}
                 <div className="pt-4 border-t border-gray-200 flex justify-end">
-                    <button type="submit" className="black-button">
-                        Save Product
+                    <button
+                        type="submit"
+                        className="black-button"
+                        disabled={isSubmitting}>
+                        {isSubmitting ? "Creating..." : "Save Product"}
                     </button>
                 </div>
             </form>

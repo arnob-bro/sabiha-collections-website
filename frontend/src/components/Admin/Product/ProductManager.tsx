@@ -3,8 +3,12 @@ import { ProductList } from "./ProductList"
 import { useState } from "react"
 import CreateProduct from "./CreateProduct"
 
+type Mode = "list" | "create" | "update"
+
 export default function ProductManager() {
     const { products, pagination } = useProducts()
+
+    const [mode, setMode] = useState<Mode>("list")
 
     const [createMode, setCreateMode] = useState<boolean>(false)
 

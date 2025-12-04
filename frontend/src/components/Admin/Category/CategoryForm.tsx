@@ -1,5 +1,5 @@
 import React from "react"
-import type { Category } from "../../../types/category"
+import type { Category } from "@/types/category"
 
 export interface CategoryFormState {
     name: string

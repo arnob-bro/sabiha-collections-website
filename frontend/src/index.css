@@ -1,15 +1,18 @@
 @import "tailwindcss";
 
 @theme {
-    --color-primary: #620405;
-    --color-secondary: #e6d7c4;
-    --color-ternary: #8c0813;
+    --color-primary: #410001;
+    --color-secondary: #f5eed5;
+    --color-ternary: #850002;
     --color-accent: #f2ebd5;
 }
 
 @layer components {
     .black-button {
         @apply inline-flex items-center px-4 py-2 rounded-md bg-gray-900 text-white text-sm font-medium hover:bg-black hover:scale-110 duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 cursor-pointer;
+    }
+    .gray-button {
+        @apply inline-flex items-center px-4 py-2 rounded-md bg-gray-300 text-gray-900 text-sm font-medium hover:bg-gray-400 hover:scale-110 duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 cursor-pointer;
     }
 }
 

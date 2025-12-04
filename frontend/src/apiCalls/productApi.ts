@@ -45,11 +45,12 @@ export default class ProductApi {
     }
 
     async createVariant(
-        data: CreateVariantDto
+        productId: string,
+        data: Omit<CreateVariantDto, "product_id">
     ): Promise<CreateVariantResponse> {
         try {
             const res = await this.productApi.post(
-                `${this.baseURL}/${data.product_id}`,
+                `${this.baseURL}/${productId}/variants`,
                 data
             )
             return res.data
@@ -60,5 +61,30 @@ export default class ProductApi {
         }
     }
 
-    async uploadImage() {}
+    async uploadVariantImages(
+        variantId: string,
+        images: File[]
+    ): Promise<{ success: boolean; images: any[] }> {
+        try {
+            const formData = new FormData()
+            images.forEach((image) => {
+                formData.append("images", image)
+            })
+
+            const res = await this.productApi.post(
+                `${this.baseURL}/variants/${variantId}/images/upload`,
+                formData,
+                {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                }
+            )
+            return res.data
+        } catch (err: any) {
+            throw new Error(
+                err.response?.data?.message || "Failed to upload images"
+            )
+        }
+    }
 }

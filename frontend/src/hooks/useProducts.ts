@@ -19,6 +19,7 @@ export function useProducts() {
         },
     })
 
+    //* FOR CREATING a product
     const productsMutation = useMutation({
         mutationFn: (payload: CreateProductDto) =>
             productApi.createProduct(payload),
@@ -30,14 +31,37 @@ export function useProducts() {
         },
     })
 
+    //* FOR CREATING a variant
     const variantMutation = useMutation({
-        mutationFn: (payload: CreateVariantDto) =>
-            productApi.createVariant(payload),
+        mutationFn: ({
+            productId,
+            data,
+        }: {
+            productId: string
+            data: Omit<CreateVariantDto, "product_id">
+        }) => productApi.createVariant(productId, data),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["products"] })
         },
         onError: () => {
             console.error("failed to create variant")
+        },
+    })
+
+    //* FOR UPLOADING an image
+    const uploadImagesMutation = useMutation({
+        mutationFn: ({
+            variantId,
+            images,
+        }: {
+            variantId: string
+            images: File[]
+        }) => productApi.uploadVariantImages(variantId, images),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["products"] })
+        },
+        onError: () => {
+            console.error("failed to upload images")
         },
     })
 
@@ -55,5 +79,9 @@ export function useProducts() {
         createVariant: variantMutation.mutateAsync,
         createdVariant: variantMutation.data?.variant,
         isCreatingVariant: variantMutation.isPending,
+
+        uploadVariantImages: uploadImagesMutation.mutateAsync,
+        uploadedImages: uploadImagesMutation.data?.images,
+        isUploadingImages: uploadImagesMutation.isPending,
     }
 }

@@ -18,17 +18,17 @@ export default function ProfilePage() {
                         <Tabs.List className="inline-flex h-10 items-center justify-center rounded-lg bg-white p-1 border border-gray-200 shadow-sm mb-6">
                             <Tabs.Trigger
                                 value="account"
-                                className="inline-flex items-center justify-center whitespace-nowrap rounded-md px-4 py-2 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-900 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-gray-900 data-[state=active]:text-white data-[state=active]:shadow data-[state=inactive]:text-gray-600 hover:text-gray-900">
+                                className="inline-flex items-center justify-center whitespace-nowrap rounded-md px-4 py-2 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-900 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-ternary data-[state=active]:text-secondary data-[state=active]:shadow data-[state=inactive]:text-gray-600 hover:text-gray-900">
                                 Profile
                             </Tabs.Trigger>
                             <Tabs.Trigger
-                                value="documents"
-                                className="inline-flex items-center justify-center whitespace-nowrap rounded-md px-4 py-2 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-900 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-gray-900 data-[state=active]:text-white data-[state=active]:shadow data-[state=inactive]:text-gray-600 hover:text-gray-900">
+                                value="history"
+                                className="inline-flex items-center justify-center whitespace-nowrap rounded-md px-4 py-2 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-900 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-ternary data-[state=active]:text-secondary data-[state=active]:shadow data-[state=inactive]:text-gray-600 hover:text-gray-900">
                                 Purchase History
                             </Tabs.Trigger>
                             <Tabs.Trigger
-                                value="settings"
-                                className="inline-flex items-center justify-center whitespace-nowrap rounded-md px-4 py-2 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-900 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-gray-900 data-[state=active]:text-white data-[state=active]:shadow data-[state=inactive]:text-gray-600 hover:text-gray-900">
+                                value="pending-orders"
+                                className="inline-flex items-center justify-center whitespace-nowrap rounded-md px-4 py-2 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-900 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-ternary data-[state=active]:text-secondary data-[state=active]:shadow data-[state=inactive]:text-gray-600 hover:text-gray-900">
                                 Pending Orders
                             </Tabs.Trigger>
                         </Tabs.List>

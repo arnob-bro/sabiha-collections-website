@@ -10,27 +10,31 @@ export default function ProductManager() {
 
     const [mode, setMode] = useState<Mode>("list")
 
-    const [createMode, setCreateMode] = useState<boolean>(false)
-
     return (
         <div>
-            <div className="space-y-2 mb-5">
-                <h1 className="text-xl font-semibold tracking-wide">
-                    Product Management
-                </h1>
-                <p className="text-sm text-gray-500">Manage products.</p>
+            <div className="flex flex-row justify-between items-center">
+                <div className="space-y-2 mb-5">
+                    <h1 className="text-xl font-semibold tracking-wide">
+                        Product Management
+                    </h1>
+                    <p className="text-sm text-gray-500">Manage products.</p>
+                </div>
+
+                <div>
+                    <button
+                        className="black-button hover:outline-none my-3"
+                        onClick={() =>
+                            mode === "create"
+                                ? setMode("list")
+                                : setMode("create")
+                        }>
+                        Create A Product
+                    </button>
+                </div>
             </div>
 
-            <button
-                className="black-button hover:outline-none my-3"
-                onClick={() => setCreateMode(!createMode)}>
-                Toggle
-            </button>
-
-            {!createMode && <ProductList products={products} />}
-            {createMode && <CreateProduct />}
-
-            {/* Product Form */}
+            {mode === "list" && <ProductList products={products} />}
+            {mode === "create" && <CreateProduct />}
         </div>
     )
 }

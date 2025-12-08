@@ -9,6 +9,12 @@ import type {
     ProductListResponse,
 } from "@/types/product"
 
+type UploadVariantImagePayload = {
+    file: File
+    is_featured_one: boolean
+    is_featured_two: boolean
+}
+
 export default class ProductApi {
     private productApi: AxiosInstance
     private baseURL: string
@@ -63,12 +69,20 @@ export default class ProductApi {
 
     async uploadVariantImages(
         variantId: string,
-        images: File[]
+        images: UploadVariantImagePayload[]
     ): Promise<{ success: boolean; images: any[] }> {
         try {
             const formData = new FormData()
             images.forEach((image) => {
-                formData.append("images", image)
+                formData.append("images", image.file)
+                formData.append(
+                    "is_featured_one",
+                    image.is_featured_one ? "true" : "false"
+                )
+                formData.append(
+                    "is_featured_two",
+                    image.is_featured_two ? "true" : "false"
+                )
             })
 
             const res = await this.productApi.post(
@@ -84,6 +98,27 @@ export default class ProductApi {
         } catch (err: any) {
             throw new Error(
                 err.response?.data?.message || "Failed to upload images"
+            )
+        }
+    }
+
+    async addVariantImageByUrl(
+        variantId: string,
+        payload: {
+            image_url: string
+            is_featured_one: boolean
+            is_featured_two: boolean
+        }
+    ): Promise<{ success: boolean; image: any }> {
+        try {
+            const res = await this.productApi.post(
+                `${this.baseURL}/variants/${variantId}/images`,
+                payload
+            )
+            return res.data
+        } catch (err: any) {
+            throw new Error(
+                err.response?.data?.message || "Failed to add image by URL"
             )
         }
     }

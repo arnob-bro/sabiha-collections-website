@@ -12,7 +12,12 @@ import type {
 } from "@/types/product"
 
 export default function CreateProduct() {
-    const { createProduct, createVariant, uploadVariantImages } = useProducts()
+    const {
+        createProduct,
+        createVariant,
+        uploadVariantImages,
+        addVariantImageByUrl,
+    } = useProducts()
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [error, setError] = useState<string | null>(null)
 
@@ -55,15 +60,29 @@ export default function CreateProduct() {
 
                 //* Step 3: Upload images for this variant (if any)
                 if (variant.images && variant.images.length > 0) {
-                    // Filter out images that are just URLs or don't have a file object
-                    const imageFiles = variant.images
-                        .filter((img) => img.file)
-                        .map((img) => img.file as File)
+                    // Handle file-based images (upload with featured flags)
+                    const fileImages = variant.images.filter((img) => img.file)
 
-                    if (imageFiles.length > 0) {
+                    if (fileImages.length > 0) {
                         await uploadVariantImages({
                             variantId,
-                            images: imageFiles,
+                            images: fileImages.map((img) => ({
+                                file: img.file as File,
+                                is_featured_one: img.is_featured_one,
+                                is_featured_two: img.is_featured_two,
+                            })),
+                        })
+                    }
+
+                    // Handle URL-based images (one request per image)
+                    const urlImages = variant.images.filter((img) => img.url)
+
+                    for (const img of urlImages) {
+                        await addVariantImageByUrl({
+                            variantId,
+                            image_url: img.url as string,
+                            is_featured_one: img.is_featured_one,
+                            is_featured_two: img.is_featured_two,
                         })
                     }
                 }

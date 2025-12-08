@@ -5,7 +5,8 @@ export type VariantImage = {
     id: string
     file?: File
     url?: string
-    is_featured_on: boolean
+    is_featured_one: boolean
+    is_featured_two: boolean
 }
 
 type VariantInput = {
@@ -149,7 +150,8 @@ export default function ProductFormComponent({
         const newImages: VariantImage[] = Array.from(files).map((file) => ({
             id: Math.random().toString(36).substring(7),
             file,
-            is_featured_on: false,
+            is_featured_one: false,
+            is_featured_two: false,
         }))
 
         setForm((prev) => {
@@ -167,7 +169,8 @@ export default function ProductFormComponent({
         const newImage: VariantImage = {
             id: Math.random().toString(36).substring(7),
             url,
-            is_featured_on: false,
+            is_featured_one: false,
+            is_featured_two: false,
         }
 
         setForm((prev) => {
@@ -202,11 +205,30 @@ export default function ProductFormComponent({
             const next = [...prev.variants]
             next[variantIndex] = {
                 ...next[variantIndex],
-                images: next[variantIndex].images.map((img) =>
-                    img.id === imageId
-                        ? { ...img, [property]: !img[property] }
-                        : img
-                ),
+                images: next[variantIndex].images.map((img) => {
+                    if (img.id !== imageId) return img
+
+                    const updated: VariantImage = {
+                        ...img,
+                        [property]: !img[property],
+                    }
+
+                    // Ensure an image cannot be both featured_one and featured_two
+                    if (
+                        property === "is_featured_one" &&
+                        updated.is_featured_one
+                    ) {
+                        updated.is_featured_two = false
+                    }
+                    if (
+                        property === "is_featured_two" &&
+                        updated.is_featured_two
+                    ) {
+                        updated.is_featured_one = false
+                    }
+
+                    return updated
+                }),
             }
             return { ...prev, variants: next }
         })
@@ -453,7 +475,7 @@ export default function ProductFormComponent({
 
                                 {/* Sizes */}
                                 <div className="space-y-1">
-                                    <div className="flex items-center justify-between">
+                                    <div className="flex items-center gap-10 mb-3">
                                         <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide">
                                             Sizes
                                         </label>
@@ -462,7 +484,7 @@ export default function ProductFormComponent({
                                             onClick={() =>
                                                 toggleAllSizes(index)
                                             }
-                                            className="text-xs text-primary hover:underline">
+                                            className="text-xs text-primary hover:bg-gray-400 duration-300 bg-gray-300 px-2 py-1 rounded-full">
                                             {SIZES.every((s) =>
                                                 variant.sizes.includes(s)
                                             )
@@ -530,25 +552,46 @@ export default function ProductFormComponent({
                                                             />
                                                         )}
                                                     </div>
-                                                    <div className="space-y-1">
-                                                        <label className="flex items-center gap-1.5 text-[10px] text-gray-600 cursor-pointer">
+                                                    <div className="space-y-1 flex flex-row gap-4 items-center">
+                                                        <label className="flex items-center gap-1.5 text-sm text-gray-600 cursor-pointer">
                                                             <input
                                                                 type="checkbox"
+                                                                name="is_featured_one_two"
                                                                 checked={
-                                                                    img.is_featured_on
+                                                                    img.is_featured_one
                                                                 }
                                                                 onChange={() =>
                                                                     toggleImageProperty(
                                                                         index,
                                                                         img.id,
-                                                                        "is_featured_on"
+                                                                        "is_featured_one"
                                                                     )
                                                                 }
                                                                 className="h-3 w-3 rounded border-gray-300 text-primary focus:ring-primary/70"
                                                             />
-                                                            Featured
+                                                            Featured one
+                                                        </label>
+
+                                                        <label className="flex items-center gap-1.5 text-sm text-gray-600 cursor-pointer">
+                                                            <input
+                                                                type="checkbox"
+                                                                name="is_featured_one_two"
+                                                                checked={
+                                                                    img.is_featured_two
+                                                                }
+                                                                onChange={() =>
+                                                                    toggleImageProperty(
+                                                                        index,
+                                                                        img.id,
+                                                                        "is_featured_two"
+                                                                    )
+                                                                }
+                                                                className="h-3 w-3 rounded border-gray-300 text-primary focus:ring-primary/70"
+                                                            />
+                                                            Featured two
                                                         </label>
                                                     </div>
+
                                                     <button
                                                         type="button"
                                                         onClick={() =>
@@ -577,9 +620,18 @@ export default function ProductFormComponent({
                                         </div>
                                     )}
 
-                                    <div className="flex flex-col md:flex-row gap-3">
+                                    {/* Image section */}
+                                    <div className="flex flex-col md:flex-row gap-3 items-center">
+                                        {/* Image upload section */}
                                         <div className="flex-1">
+                                            <label
+                                                htmlFor={`variant-images-${index}`}
+                                                className="flex flex-1 items-center justify-center w-full cursor-pointer rounded-xl border border-gray-300 bg-primary text-white px-4 py-3 text-sm font-medium text-gray-700 shadow-sm hover:bg-primary/80 transition">
+                                                Upload from device
+                                            </label>
+
                                             <input
+                                                id={`variant-images-${index}`}
                                                 type="file"
                                                 multiple
                                                 accept="image/*"
@@ -589,14 +641,20 @@ export default function ProductFormComponent({
                                                         e.target.files
                                                     )
                                                 }
-                                                className="gray-button"
+                                                className="hidden"
                                             />
                                         </div>
-                                        <div className="flex-1 flex gap-2">
+
+                                        <span className="text-xs text-black">
+                                            or
+                                        </span>
+
+                                        {/* IMAGE LINK SECTION */}
+                                        <div className="flex-3 flex gap-2">
                                             <input
                                                 type="text"
-                                                placeholder="Or paste image URL"
-                                                className="flex-1 px-3 py-2 rounded-md border border-gray-300 bg-white focus:outline-none focus:ring-2 focus:ring-primary/70 focus:border-primary/70 text-xs"
+                                                placeholder="Paste image URL"
+                                                className="flex-1 px-3 py-2 rounded-md border border-gray-300 bg-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/70 focus:border-primary/70 text-xs"
                                                 onKeyDown={(e) => {
                                                     if (e.key === "Enter") {
                                                         e.preventDefault()
@@ -622,7 +680,7 @@ export default function ProductFormComponent({
                                                     )
                                                     input.value = ""
                                                 }}
-                                                className="px-3 py-2 bg-gray-100 text-gray-700 rounded-md text-xs font-medium hover:bg-gray-200 border border-gray-300">
+                                                className="px-3 py-2 bg-gray-600 text-white rounded-md text-xs font-medium hover:bg-gray-800 border border-gray-300 duration-300">
                                                 Add
                                             </button>
                                         </div>
@@ -634,10 +692,10 @@ export default function ProductFormComponent({
                 </div>
 
                 {/* Submit (parent will handle actual logic) */}
-                <div className="pt-4 border-t border-gray-200 flex justify-end">
+                <div className="pt-4 border-t border-gray-200 flex justify-center">
                     <button
                         type="submit"
-                        className="black-button"
+                        className="black-button bg-green-800"
                         disabled={isSubmitting}>
                         {isSubmitting ? "Creating..." : "Save Product"}
                     </button>

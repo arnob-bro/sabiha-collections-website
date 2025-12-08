@@ -48,20 +48,50 @@ export function useProducts() {
         },
     })
 
-    //* FOR UPLOADING an image
+    //* FOR UPLOADING an image (file-based)
     const uploadImagesMutation = useMutation({
         mutationFn: ({
             variantId,
             images,
         }: {
             variantId: string
-            images: File[]
+            images: {
+                file: File
+                is_featured_one: boolean
+                is_featured_two: boolean
+            }[]
         }) => productApi.uploadVariantImages(variantId, images),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["products"] })
         },
         onError: () => {
             console.error("failed to upload images")
+        },
+    })
+
+    //* FOR ADDING an image by URL
+    const addImageByUrlMutation = useMutation({
+        mutationFn: ({
+            variantId,
+            image_url,
+            is_featured_one,
+            is_featured_two,
+        }: {
+            variantId: string
+            image_url: string
+            is_featured_one: boolean
+            is_featured_two: boolean
+        }) =>
+            productApi.addVariantImageByUrl(variantId, {
+                image_url,
+                is_featured_one,
+                is_featured_two,
+            }),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["products"] })
+        },
+        onError: () => {
+            console.error("failed to add image by url")
         },
     })
 
@@ -83,5 +113,7 @@ export function useProducts() {
         uploadVariantImages: uploadImagesMutation.mutateAsync,
         uploadedImages: uploadImagesMutation.data?.images,
         isUploadingImages: uploadImagesMutation.isPending,
+
+        addVariantImageByUrl: addImageByUrlMutation.mutateAsync,
     }
 }
